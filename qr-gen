@@ -1,0 +1,61 @@
+import openpyxl
+import qrcode
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
+
+# pip install openpyxl qrcode
+
+
+def generate_qr_codes_from_excel():
+    # Prompt the user to select an Excel file
+    Tk().withdraw()  # Hide the tkinter root window
+    file_path = askopenfilename(filetypes=[("Excel Files", "*.xlsx;*.xls")])
+    
+    if not file_path:
+        print("No file selected.")
+        return
+    
+    # Load the Excel workbook
+    workbook = openpyxl.load_workbook(file_path)
+    
+    # Prompt the user to select a worksheet
+    sheet_names = workbook.sheetnames
+    print("Available Sheets:")
+    for i, sheet_name in enumerate(sheet_names):
+        print(f"{i+1}. {sheet_name}")
+    
+    sheet_index = input("Enter the index of the sheet: ")
+    try:
+        sheet_index = int(sheet_index) - 1
+        if sheet_index < 0 or sheet_index >= len(sheet_names):
+            raise ValueError
+    except ValueError:
+        print("Invalid sheet index.")
+        return
+    
+    # Select the worksheet
+    worksheet = workbook[sheet_names[sheet_index]]
+    
+    # Prompt the user to select the column
+    column = input("Enter the column letter: ")
+    
+    # Get the column of URLs
+    urls = worksheet[column]
+    
+    # Generate QR codes for each URL
+    for cell in urls[1:]:
+        url = cell.value
+        
+        # Generate the QR code
+        qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=10, border=4)
+        qr.add_data(url)
+        qr.make(fit=True)
+        
+        # Create an image from the QR code
+        qr_image = qr.make_image(fill_color="black", back_color="white")
+        
+        # Save the QR code image
+        qr_image.save(f"{url}.png")
+
+# Example usage
+generate_qr_codes_from_excel()
