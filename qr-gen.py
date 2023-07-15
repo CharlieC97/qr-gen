@@ -4,13 +4,13 @@ import tkinter as tk
 from tkinter import filedialog
 
 def generate_qr_codes_from_excel():
-    #Create Tkinter root window
+    # Create Tkinter root window
     root = tk.Tk()
     root.withdraw()  # Hide the root window
     
     # Prompt the user to select an Excel file
     file_path = filedialog.askopenfilename(filetypes=[("Excel Files", "*.xlsx")])
-    
+
     if not file_path:
         print("No file selected.")
         return
@@ -44,6 +44,13 @@ def generate_qr_codes_from_excel():
     urls = worksheet[url_column]
     names = worksheet[name_column]
     
+    # Prompt the user to select the destination directory
+    destination_dir = filedialog.askdirectory()
+    
+    if not destination_dir:
+        print("No destination directory selected.")
+        return
+    
     # Generate QR codes for each URL
     for url_cell, name_cell in zip(urls[1:], names[1:]):
         url = url_cell.value
@@ -58,7 +65,9 @@ def generate_qr_codes_from_excel():
         qr_image = qr.make_image(fill_color="black", back_color="white")
         
         # Save the QR code image with the name from the name column
-        qr_image.save(f"{name}.png")
+        file_path = f"{destination_dir}/{name}.png"
+        qr_image.save(file_path)
+        print(f"QR code saved: {file_path}")
 
 
 # Example usage
