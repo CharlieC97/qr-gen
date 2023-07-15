@@ -7,12 +7,12 @@ import tkinter as tk
 from tkinter import filedialog
 
 def generate_qr_codes_from_excel():
-    # Create Tkinter root window
+    #Create Tkinter root window
     root = tk.Tk()
     root.withdraw()  # Hide the root window
     
     # Prompt the user to select an Excel file
-    file_path = filedialog.askopenfilename(filetypes=[("Excel Files", "*.xlsx;*.xls")])
+    file_path = filedialog.askopenfilename(filetypes=[("Excel Files", "*.xlsx")])
     
     if not file_path:
         print("No file selected.")
@@ -27,7 +27,7 @@ def generate_qr_codes_from_excel():
     for i, sheet_name in enumerate(sheet_names):
         print(f"{i+1}. {sheet_name}")
     
-    sheet_index = input("Enter the index of the sheet: ")
+    sheet_index = 1
     try:
         sheet_index = int(sheet_index) - 1
         if sheet_index < 0 or sheet_index >= len(sheet_names):
@@ -40,8 +40,8 @@ def generate_qr_codes_from_excel():
     worksheet = workbook[sheet_names[sheet_index]]
     
     # Prompt the user to select the URL and name columns
-    url_column = input("Enter the column letter of the URLs: ")
-    name_column = input("Enter the column letter of the names: ")
+    url_column = "A"
+    name_column = "B"
     
     # Get the columns of URLs and names
     urls = worksheet[url_column]
@@ -63,29 +63,6 @@ def generate_qr_codes_from_excel():
         # Save the QR code image with the name from the name column
         qr_image.save(f"{name}.png")
 
-# Example usage
-generate_qr_codes_from_excel()
-
-    # Prompt the user to select the column
-    column = input("Enter the column letter: ")
-    
-    # Get the column of URLs
-    urls = worksheet[column]
-    
-    # Generate QR codes for each URL
-    for cell in urls[1:]:
-        url = cell.value
-        
-        # Generate the QR code
-        qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=10, border=4)
-        qr.add_data(url)
-        qr.make(fit=True)
-        
-        # Create an image from the QR code
-        qr_image = qr.make_image(fill_color="black", back_color="white")
-        
-        # Save the QR code image
-        qr_image.save(f"{url}.png")
 
 # Example usage
 generate_qr_codes_from_excel()
