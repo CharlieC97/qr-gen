@@ -1,6 +1,3 @@
-
-# pip install openpyxl qrcode
-
 import openpyxl
 import qrcode
 import tkinter as tk
