@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>QR Code Generator</title>
+  </head>
+  <body>
+    <h1>QR Code Generator</h1>
+    <button onclick="runScript()">Choose Excel File</button>
+
+    <script>
+      function runScript() {
+        fetch("/run_script")
+          .then((response) => response.text())
+          .then((output) => console.log(output))
+          .catch((error) => console.error(error));
+      }
+    </script>
+  </body>
+</html>
